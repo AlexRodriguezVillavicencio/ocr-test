@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-
-import { CameraWrapper, QrReaderWrapper} from './QrReader.styles';
 
 function QrReader() {
-  const { qrReaderModal } = useSelector((state) => state.app);
-
-  /* JSQR */
   const canvasRef = useRef();
   const isScanning = useRef(false);
   const [hasPermission, setHasPermission] = useState(false);
@@ -20,11 +14,6 @@ function QrReader() {
     audio: false,
   };
 
-  function revokeCameraPermissions() {
-    alert(
-      "Ha negado el acceso a la camara.\nPara revocar los permisos de la cámara, por favor siga estos pasos:\n\n1. Abra la página de configuración de permisos de la cámara en su navegador.\n2. Encuentre y seleccione 'tracesurfer.com' o 't-s.fyi' y revocar los permisos de la cámara.\n3. Haga clic en el botón de revocar permisos.\n4. Recargue la página."
-    );
-  }
 
   const handleCamera = async () => {
     try {
@@ -39,14 +28,11 @@ function QrReader() {
     }
   };
 
-  useEffect(() => {
-    qrReaderModal && handleCamera();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qrReaderModal]);
 
   useEffect(() => {
     async function scan() {
-      if (isScanning.current && hasPermission) {
+      if (isScanning.current ) {
+        console.log(isScanning.current)
         const video = videoRef.current;
         if (video !== null) {
           const canvas = document.createElement('canvas');
@@ -63,31 +49,20 @@ function QrReader() {
       }
     }
 
-    if (isScanning && qrReaderModal === true) {
-      setTimeout(() => {
-        scan();
-      }, 2000);
-    }
-
   });
 
-  useEffect(() => {
-    if (qrReaderModal === true) isScanning.current = true;
-  }, [qrReaderModal]);
 
   const handleVideoError = (event) => {
     alert(event.target.error);
   };
 
   return (
-    <QrReaderWrapper show={qrReaderModal}>
-        <CameraWrapper>
-          {!hasPermission && (
-            <button onClick={revokeCameraPermissions}>
+        <>
+            <button onClick={handleCamera}>
               Acceder a la cámara
             </button>
-          )}
-          {qrReaderModal && hasPermission && (
+
+          {hasPermission && (
             <div
               style={{
                 position: 'relative',
@@ -124,12 +99,11 @@ function QrReader() {
 
           <canvas
             ref={canvasRef}
-            width="640"
-            height="480"
+            width="320"
+            height="240"
             style={{ display: 'none' }}
           ></canvas>
-        </CameraWrapper>
-    </QrReaderWrapper>
+        </>
   );
 }
 
