@@ -58,7 +58,7 @@ function QrReader() {
 
   return (
         <>
-            <button onClick={handleCamera}>
+            <button style={{padding:30,fontSize:20}} onClick={handleCamera}>
               Acceder a la cámara
             </button>
 
