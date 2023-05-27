@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import QrReader from "./App/QrReader";
+import App from "./App/App";
 
 ReactDOM.render(
-      <QrReader/>,
+      <App />,
   document.getElementById("root")
 );
