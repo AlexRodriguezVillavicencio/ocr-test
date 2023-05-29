@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, Fragment } from 'react';
+import { createContext, useState} from 'react';
 
 import { 
 Nav, 
@@ -9,33 +9,32 @@ GlobalStyles} from './App.styles'
 import ButtonX from '../components/Button/Button';
 import OCRreader from '../components/OCRreader/OCRreader';
 
+export const MyContext = createContext(); 
 
 export default function App() {
 
   const [permissionCamera, setPermissionCamera] = useState(false)
   const [permissionRecognition,setPermisionRecognition] = useState(false)
-
-  const handleCameraBool = (context) => {
-    setPermissionCamera(context);
-  }
-
-  const handleSnapBtnBool = (context) => {
-    setPermisionRecognition(context);
-  }
+  const [base64Context, setBase64Context] = useState(null);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   return (
-    <Fragment>
+    <MyContext.Provider 
+        value={{ base64Context, setBase64Context,
+                permissionCamera, setPermissionCamera,
+                permissionRecognition,setPermisionRecognition,
+                buttonDisabled, setButtonDisabled }}>
       <GlobalStyles />
       <Nav>
         <h1>OCR</h1>
         <p>Prueba de códigos</p>
       </Nav>
-      <OCRreader  permissionCamera={permissionCamera} permissionRecognition={permissionRecognition}/>
+      <OCRreader/>
       <div id="containtText"></div>
-      <ButtonX handleCameraBool={handleCameraBool} handleSnapBtnBool={handleSnapBtnBool} />
+      <ButtonX/>
       <MovilWarning>
         <h2>Disponible solo para moviles</h2>
       </MovilWarning>
-    </Fragment>
+    </MyContext.Provider>
   )
 }

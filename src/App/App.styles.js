@@ -27,7 +27,7 @@ export const Nav = styled.nav`
 
 export const MovilWarning = styled.div`
   display: none;
-  @media (min-width: 740px) {
+  @media (min-width: 540px) {
     display: flex;
     justify-content: center;
     top: 200px;
