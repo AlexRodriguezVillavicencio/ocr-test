@@ -7,7 +7,7 @@ export const ContainerVideo = styled.div`
   height: 80px;
   position: relative;
   justify-content: center;
-  @media (min-width: 740px) {
+  @media (min-width: 540px) {
     display: none;
   }
 `;

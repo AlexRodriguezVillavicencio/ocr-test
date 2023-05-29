@@ -1,25 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { 
-  ContainerVideo, 
-  Canvas} from './OCRreader.styles';
-import { useEffect, useRef, useState } from 'react';
+import { ContainerVideo, Canvas} from './OCRreader.styles';
+import { useEffect, useRef, useState, useContext } from 'react';
 
 import { getRecognition } from '../../api/fetchs';
+import { MyContext } from '../../App/App';
 
-export default function OCRreader({permissionCamera,permissionRecognition}) {
-  const [hasPermission, setHasPermission] = useState(false);
+const constraints = {
+  video: {
+    facingMode: 'environment',
+  },
+  audio: false,
+};
+
+export default function OCRreader() {
   const canvasRef = useRef(null); 
   const videoRef = useRef(null);
   let globalStream = useRef(null);
   const [videoError, setVideoError] = useState(null);
+  const { setBase64Context,
+          permissionCamera,
+          permissionRecognition,
+          setPermisionRecognition,
+          setButtonDisabled} = useContext(MyContext);
 
-  const constraints = {
-    video: {
-      facingMode: 'environment',
-    },
-    audio: false,
-  };
 
   const handleCamera = async () => {
     try {
@@ -33,8 +37,8 @@ export default function OCRreader({permissionCamera,permissionRecognition}) {
     }
   };
 
+  // start camera
   useEffect(() => {
-    setHasPermission(permissionCamera);
     if (permissionCamera) {
       setTimeout(() => {
         handleCamera();
@@ -42,18 +46,19 @@ export default function OCRreader({permissionCamera,permissionRecognition}) {
     }
   }, [permissionCamera]);
 
+  // stop camera
   useEffect(() => {
     const video = globalStream.current;
     if (video) {
       const tracks = video.getTracks();
       tracks.forEach((track) => track.stop());
     } 
-  }, [hasPermission]);
+  }, [permissionCamera]);
 
   useEffect(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
+    const context = canvas?.getContext('2d');
     canvas.width = 320;
     canvas.height = 80;
     const dwidth = 320;
@@ -75,17 +80,21 @@ export default function OCRreader({permissionCamera,permissionRecognition}) {
         video.removeEventListener('play', drawFrame);
       }
     };
-  }, [hasPermission]);
+  }, [permissionCamera]);
 
   useEffect(() => {
-    if (permissionRecognition) { // Verificar si canvas está definido
-      const dataURL = canvasRef.current.toDataURL('image/jpeg'); // Generar base64
-      getRecognition(dataURL)
-      .then( response => {
-        ReactDOM.render(response, document.getElementById('insertText'))
+    if (permissionRecognition) {
+        setButtonDisabled(true);
+        const dataURL = canvasRef.current.toDataURL('image/jpeg');
+        setBase64Context(dataURL);
+        getRecognition(dataURL)
+        .then( response => {
+              ReactDOM.render(response, document.getElementById('insertText'))
+              setButtonDisabled(false);
+            }
+            )
+        setPermisionRecognition(false);
       }
-      )
-    }
   }, [permissionRecognition]);
 
 
