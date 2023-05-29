@@ -1,4 +1,4 @@
-import React, { useRef,useState } from 'react';
+import React, { useRef,useState,useContext,useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,29 +18,36 @@ TextButton,
 Text,
 TextInput} from './Button.styles';
 
-// import {formDataCSV,ProcessIMG} from '../../utils/helpers';
+import { formDataCSV,ProcessIMG } from '../../utils/helpers';
+import { addPhoto,addCSVtoS3 } from '../../utils/aws';
+import { MyContext } from '../../App/App';
 
-export default function ButtonX({handleCameraBool,handleSnapBtnBool}) {
+export default function ButtonX() {
   const [startButton, setStartButton] = useState(true);
   const [stopButton, setStopButton] = useState(false);
-  const [buttonDisabled, setButtonDisabled] = useState(true);
   const inputRef = useRef('');
   const textRef = useRef('');
+  const { base64Context,
+          setPermissionCamera,
+          setPermisionRecognition,
+          buttonDisabled, 
+          setButtonDisabled } = useContext(MyContext);
+  const base64ContextRef = useRef(base64Context);
 
   const handleStartButton = () => {
     setStartButton(false);
     setStopButton(true);
-    handleCameraBool(true);
+    setPermissionCamera(true);
     setButtonDisabled(false);
   };
 
   const handleStopButton = () => {
     setStopButton(false);
     setStartButton(true);
-    handleCameraBool(false);
+    setPermissionCamera(false);
     setButtonDisabled(true);
     ReactDOM.render('', document.getElementById('containtText'));
-    handleSnapBtnBool(false);
+    setPermisionRecognition(false);
   };
 
   const handleSnapBtn = () => {
@@ -58,7 +65,7 @@ export default function ButtonX({handleCameraBool,handleSnapBtnBool}) {
       </TextGroup>
       );
     ReactDOM.render(htmlContent, document.getElementById('containtText'));
-    handleSnapBtnBool(true);
+    setPermisionRecognition(true);
   };
 
   const contentUnLike = () => {
@@ -75,23 +82,29 @@ export default function ButtonX({handleCameraBool,handleSnapBtnBool}) {
       );
       ReactDOM.render(htmlContent, document.getElementById('containtText'));
       setButtonDisabled(true);
-      
   };
 
   const LikePrediction = () => {
     setButtonDisabled(true);
-    // const { formData, urlDate } = formDataCSV("no", textRef.current.innerText);
-    // addPhoto(ProcessIMG(),textRef.current.innerText, urlDate)
-    // addCSVtoS3(formData, urlDate);
+    const { formData, urlDate } = formDataCSV("no", textRef.current.innerText);
+    addPhoto(ProcessIMG(base64ContextRef.current),textRef.current.innerText, urlDate)
+    addCSVtoS3(formData, urlDate)
+    setButtonDisabled(false)
     ReactDOM.render('', document.getElementById('containtText'));
   }
 
+
   const SendUnlikePrediction = () => {
-    // const { formData, urlDate } = formDataCSV("no", inputRef.current.value);
-    // addPhoto(ProcessIMG(),inputRef.current.value, urlDate)
-    // addCSVtoS3(formData, urlDate);
+    const { formData, urlDate } = formDataCSV("no", inputRef.current.value);
+    addPhoto(ProcessIMG(base64ContextRef.current),inputRef.current.value, urlDate)
+    addCSVtoS3(formData, urlDate);
+    setButtonDisabled(false)
     ReactDOM.render('', document.getElementById('containtText'));
   }
+
+  useEffect(() => {
+    base64ContextRef.current = base64Context;
+  },[base64Context]);
 
   return (
     <GroupButton>

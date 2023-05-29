@@ -19,7 +19,7 @@ export const GroupButton = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  @media (min-width: 740px) {
+  @media (min-width: 540px) {
     display: none;
   }
 `;
@@ -34,7 +34,7 @@ export const TextGroup = styled.div`
   grid-template-columns: repeat(8, 1fr);
   gap: 10px;
   padding: 0 10px;
-  @media (min-width: 740px) {
+  @media (min-width: 540px) {
     display: none;
   }
 `;
