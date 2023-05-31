@@ -15,7 +15,9 @@ const constraints = {
 
 export default function OCRreader() {
   const canvasRef = useRef(null); 
+  const canvasImgRef = useRef(null);
   const videoRef = useRef(null);
+  const dataImageRef = useRef(null);
   let globalStream = useRef(null);
   const [videoError, setVideoError] = useState(null);
   const { setBase64Context,
@@ -49,6 +51,8 @@ export default function OCRreader() {
   // stop camera
   useEffect(() => {
     const video = globalStream.current;
+    const canvasImg = canvasImgRef.current?.getContext('2d');
+    canvasImg.clearRect(0, 0,320,80);
     if (video) {
       const tracks = video.getTracks();
       tracks.forEach((track) => track.stop());
@@ -58,16 +62,36 @@ export default function OCRreader() {
   useEffect(() => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const context = canvas?.getContext('2d');
+    const context = canvas?.getContext('2d', { willReadFrequently: true });
     canvas.width = 320;
-    canvas.height = 80;
+    canvas.height = 120;
     const dwidth = 320;
-    const dheight = 80;
+    const dheight = 120;
     const dx = 640/2 - dwidth/2;
     const dy = 480/2 - dheight/2;
-    
+
+    context.strokeStyle = 'red';
+    context.lineWidth = 1;
+
     const drawFrame = () => {
       context?.drawImage(video, dx, dy, dwidth, dheight, 0, 0, dwidth, dheight);
+      context.beginPath();
+      context.moveTo(dwidth/2-100, dheight/2 -20);
+      context.lineTo(dwidth/2+100, dheight/2 -20);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(dwidth/2-100, dheight/2 +20);
+      context.lineTo(dwidth/2+100, dheight/2 +20);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(dwidth/2-100, dheight/2 -20);
+      context.lineTo(dwidth/2-100, dheight/2 +20);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(dwidth/2+100, dheight/2 -20);
+      context.lineTo(dwidth/2+100, dheight/2 +20);
+      context.stroke();
+      dataImageRef.current = context.getImageData(dwidth/2-100, dheight/2-20, 200, 40);
       requestAnimationFrame(drawFrame);
     };
   
@@ -78,6 +102,7 @@ export default function OCRreader() {
     return () => {
       if (video) {
         video.removeEventListener('play', drawFrame);
+        
       }
     };
   }, [permissionCamera]);
@@ -85,7 +110,13 @@ export default function OCRreader() {
   useEffect(() => {
     if (permissionRecognition) {
         setButtonDisabled(true);
-        const dataURL = canvasRef.current.toDataURL('image/jpeg');
+        const context = canvasRef.current.getContext('2d');
+        const contextImg = canvasImgRef.current.getContext('2d');
+        const dwidth = 320;
+        const dheight = 80; 
+        const imageData = context.getImageData(dwidth/2-100, dheight/2, 200, 40);
+        contextImg.putImageData(imageData, 0, 0);
+        const dataURL = canvasImgRef.current.toDataURL('image/jpeg');
         setBase64Context(dataURL);
         getRecognition(dataURL)
         .then( response => {
@@ -99,18 +130,23 @@ export default function OCRreader() {
 
 
   return (
-  <ContainerVideo>
+    <>
+  <ContainerVideo style={{ top: 120}}>
     <video
       style={{ width: '0px', height: '0px'}}
       ref={videoRef}
       autoPlay
       muted
-      playsInline
+      playsInline 
       onLoadedData={() => {
         videoRef.current.play();
       }}
-    />
-    <Canvas id="canvas" ref={canvasRef} ></Canvas>
+      />
+    <Canvas id="canvas" ref={canvasRef} />
   </ContainerVideo>
+  <ContainerVideo style={{ top: 150}}>
+    <Canvas id="canvasImg" width={200} height={40} ref={canvasImgRef} />
+  </ContainerVideo>
+  </>
   )
 }

@@ -2,9 +2,8 @@ import styled from "styled-components";
 
 export const ContainerVideo = styled.div`
   display: flex;
-  top: 120px;
   width: 100vw;
-  height: 80px;
+  height: 120px;
   position: relative;
   justify-content: center;
   @media (min-width: 540px) {
