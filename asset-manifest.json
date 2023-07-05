@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/pruebaIphone2/static/js/main.4d992695.js",
-    "index.html": "/pruebaIphone2/index.html",
-    "main.4d992695.js.map": "/pruebaIphone2/static/js/main.4d992695.js.map"
+    "main.js": "/ocr-test/static/js/main.efc8f9b0.js",
+    "index.html": "/ocr-test/index.html",
+    "main.efc8f9b0.js.map": "/ocr-test/static/js/main.efc8f9b0.js.map"
   },
   "entrypoints": [
-    "static/js/main.4d992695.js"
+    "static/js/main.efc8f9b0.js"
   ]
 }
