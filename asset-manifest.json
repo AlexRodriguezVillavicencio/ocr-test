@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/ocr-test/static/js/main.4e85be8b.js",
+    "main.js": "/ocr-test/static/js/main.7a69e98a.js",
     "index.html": "/ocr-test/index.html",
-    "main.4e85be8b.js.map": "/ocr-test/static/js/main.4e85be8b.js.map"
+    "main.7a69e98a.js.map": "/ocr-test/static/js/main.7a69e98a.js.map"
   },
   "entrypoints": [
-    "static/js/main.4e85be8b.js"
+    "static/js/main.7a69e98a.js"
   ]
 }
