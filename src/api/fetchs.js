@@ -17,6 +17,8 @@ export const getRecognition = async (dataURL) => {
         const parsedResults = ocrParsedResult["ParsedResults"]
         return parsedResults[0]['ParsedText']}
       );
+      console.log("respuesta")
+      alert(response)
       console.log(response)
       return response;
     } catch (error) {
