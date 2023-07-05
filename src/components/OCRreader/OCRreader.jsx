@@ -76,22 +76,22 @@ export default function OCRreader() {
     const drawFrame = () => {
       context?.drawImage(video, dx, dy, dwidth, dheight, 0, 0, dwidth, dheight);
       context.beginPath();
-      context.moveTo(dwidth/2-100, dheight/2 -20);
-      context.lineTo(dwidth/2+100, dheight/2 -20);
+      context.moveTo(dwidth/2-130, dheight/2 -30);
+      context.lineTo(dwidth/2+130, dheight/2 -30);
       context.stroke();
       context.beginPath();
-      context.moveTo(dwidth/2-100, dheight/2 +20);
-      context.lineTo(dwidth/2+100, dheight/2 +20);
+      context.moveTo(dwidth/2-130, dheight/2 +30);
+      context.lineTo(dwidth/2+130, dheight/2 +30);
       context.stroke();
       context.beginPath();
-      context.moveTo(dwidth/2-100, dheight/2 -20);
-      context.lineTo(dwidth/2-100, dheight/2 +20);
+      context.moveTo(dwidth/2-130, dheight/2 -30);
+      context.lineTo(dwidth/2-130, dheight/2 +30);
       context.stroke();
       context.beginPath();
-      context.moveTo(dwidth/2+100, dheight/2 -20);
-      context.lineTo(dwidth/2+100, dheight/2 +20);
+      context.moveTo(dwidth/2+130, dheight/2 -30);
+      context.lineTo(dwidth/2+130, dheight/2 +30);
       context.stroke();
-      dataImageRef.current = context.getImageData(dwidth/2-100, dheight/2-20, 200, 40);
+      dataImageRef.current = context.getImageData(dwidth/2-130, dheight/2-30, 260, 60);
       requestAnimationFrame(drawFrame);
     };
   
@@ -114,7 +114,7 @@ export default function OCRreader() {
         const contextImg = canvasImgRef.current.getContext('2d');
         const dwidth = 320;
         const dheight = 80; 
-        const imageData = context.getImageData(dwidth/2-100, dheight/2, 200, 40);
+        const imageData = context.getImageData(dwidth/2-130, dheight/2-10, 260, 60);
         contextImg.putImageData(imageData, 0, 0);
         const dataURL = canvasImgRef.current.toDataURL('image/jpeg');
         setBase64Context(dataURL);
@@ -145,7 +145,7 @@ export default function OCRreader() {
     <Canvas id="canvas" ref={canvasRef} />
   </ContainerVideo>
   <ContainerVideo style={{ top: 150}}>
-    <Canvas id="canvasImg" width={200} height={40} ref={canvasImgRef} />
+    <Canvas id="canvasImg" width={260} height={60} ref={canvasImgRef} />
   </ContainerVideo>
   </>
   )
